@@ -32,7 +32,7 @@
   mysql_db:
     state: dump
     name: "{{ db_name }}"
-    target: /tmp/{{ db_name }}-{{ansible_date_time.date}}.sql
+    target: /tmp/{{ db_name }}-{{ ansible_date_time.date }}.sql
     login_unix_socket: /var/run/mysqld/mysqld.sock
   ignore_errors: true
 
@@ -73,6 +73,7 @@
 - name: Retrieve mysql binary archive.
   become: yes
   shell: zcat /usr/share/doc/zabbix-proxy-mysql/schema.sql.gz > /tmp/schema.sql
+  changed_when: false
 
 - name: Import zabbix schema database
   mysql_db:
@@ -135,3 +136,4 @@
 - name: Enable zabbix proxy
   become: yes
   command: update-rc.d zabbix-proxy enable
+  changed_when: false
