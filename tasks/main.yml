@@ -81,12 +81,12 @@
     target: /tmp/schema.sql
     login_unix_socket: /var/run/mysqld/mysqld.sock
   register: db_imported
-  #failed_when: true
   ignore_errors: true
 
 - name: Copy zabbix proxy sql file to temp folder
   become: no
-  local_action: copy content="{{ role_path }}"/files/zabbix-proxy.sql dest="/tmp/zabbix-proxy.sql"
+  delegate_to: localhost
+  copy: content="{{ role_path }}"/files/zabbix-proxy.sql dest="/tmp/zabbix-proxy.sql"
 
 - name: Copy zabbix proxy sql file to tmp folder
   become: no
@@ -122,12 +122,6 @@
     group: root
     mode: u=rw,g=r,o=r
     backup: yes
-
-# - name: Start service zabbix-proxy and zabbix-agent, if not started
-#   service:
-#     name: "{{ item }}"
-#     state: started
-#   loop: ['zabbix-proxy', 'zabbix-agent']
 
 - name: restart service zabbix proxy and agent on
   systemd:
